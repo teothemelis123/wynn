@@ -20,13 +20,22 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 echo '<html><body style="width:100vw;">';
-echo '<div style="display:flex;width:100vw;">';
-foreach ($guildData['members']['chief'] as $chief) {
-    $skinApiUrl = 'https://mc-heads.net/body/'.$chief['uuid'].'/right';
+echo '<div style="width:100vw;">';
+$ranksCount = 0;
+foreach ($guildData['members'] as $title => $members) {
+    if ($ranksCount != 0) {
+        echo '<div><h2>'.$title.'</h2>';
+        foreach ($members as $memberData) {
+        $skinApiUrl = 'https://mc-heads.net/body/'.$memberData['uuid'].'/right';
+        echo '<img style="width:70px;height:auto;" src="' . htmlspecialchars($skinApiUrl) . '">';
+
+        }
+        echo '</div><br><br>';
+    }
+   
     
     
-    echo '<img src="' . htmlspecialchars($skinApiUrl) . '" alt="Skin of ' . htmlspecialchars($chief['uuid']) . '">';
-    
+    $ranksCount++;
 }
 echo '</div>';
 echo '</body></html>';
