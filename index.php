@@ -58,6 +58,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 </head>
 
 <body>
+    <a href="items.php">To items page</a>
     <div class="guild-members">
         <?php
         $ranksCount = 0;
