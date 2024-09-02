@@ -17,10 +17,8 @@
 <body>
 <a href="index.php">Home</a>
 
-<form onsubmit="searchitems(); return false;">
-<input id="itemname" placeholder="Item name"></input>
-<input type="submit" value="Search"></input>
-</form>
+<input id="itemname" onkeyup="searchitems(); return false;" placeholder="Item name"></input>
+
 
 <div id="iteminfo"> </div>
 
@@ -42,23 +40,42 @@
 
 
     function searchitems() {
-    var itemname = encodeURI(gid('itemname').value);
+        var itemname = encodeURI(gid('itemname').value);
 
-    $.ajax({
-        type: 'GET',
-        url: 'services.php',
-        data: { 
-            cmd: 'searchitems',  
-            itemname: itemname
-        },
-        success: function (response) {
-            gid("iteminfo").innerHTML = response;
-        },
-        error: function (error) {
-            console.log(error);
+        //Here i am doing something similar to their website in which you have to put at least 3 letters in.
+
+        if (itemname.length < 3) {
+            gid("iteminfo").innerHTML = ""; 
+            return;
         }
-    });
-}
+
+        $.ajax({
+            type: 'GET',
+            url: 'services.php',
+            data: { 
+                cmd: 'searchitems',  
+                itemname: itemname
+            },
+            success: function (response) {
+                gid("iteminfo").innerHTML = response;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+function debounce(func, delay) {
+        let timeout;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    const debouncedSearch = debounce(searchitems, 300);
 
 
 </script>
