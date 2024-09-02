@@ -16,7 +16,7 @@
 <body>
 <a href="index.php">Home</a>
 
-<form onsubmit="searchitems()">
+<form onsubmit="searchitems(); return false;">
 <input id="itemname" placeholder="Item name"></input>
 <input type="submit" value="Search"></input>
 </form>
