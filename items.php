@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wynn items</title>
@@ -28,16 +29,36 @@
         return document.getElementById(str);
     }
 
+    // function searchitems() {
+    //     const itemname = encodeURI(gid('itemname').value);
+    //     if (itemname=="") return;
+    //     const xhttp = new XMLHttpRequest();
+    //     xhttp.onload = function() {
+    //         gid("iteminfo").innerHTML = this.responseText;
+    //     }
+    //     xhttp.open("GET", "services.php?cmd=searchitems&itemname="+itemname, true);
+    //     xhttp.send();
+    // }
+
+
     function searchitems() {
-        const itemname = encodeURI(gid('itemname').value);
-        if (itemname=="") return;
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-            gid("iteminfo").innerHTML = this.responseText;
+    var itemname = encodeURI(gid('itemname').value);
+
+    $.ajax({
+        type: 'GET',
+        url: 'services.php',
+        data: { 
+            cmd: 'searchitems',  
+            itemname: itemname
+        },
+        success: function (response) {
+            gid("iteminfo").innerHTML = response;
+        },
+        error: function (error) {
+            console.log(error);
         }
-        xhttp.open("GET", "services.php?cmd=searchitems&itemname="+itemname, true);
-        xhttp.send();
-    }
+    });
+}
 
 
 </script>
