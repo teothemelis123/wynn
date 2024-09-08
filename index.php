@@ -4,6 +4,7 @@ $wynnGuildUrl = 'https://api.wynncraft.com/v3/guild/Light%20Within';
 $ch = curl_init($wynnGuildUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
 $response = curl_exec($ch);
 
