@@ -1,6 +1,8 @@
 <?php
+include 'icl/listitems.inc.php';
 function searchitems() {
-    $wynnItemUrl = 'https://api.wynncraft.com/v3/item/search'; // DO NOT ADD BACKSLASH AT THE END!
+    $page = $_GET['page'] ?? 1; // 1 pages are 1 indexed
+    $wynnItemUrl = 'https://api.wynncraft.com/v3/item/search?page='.$page; // DO NOT ADD BACKSLASH AT THE END!
 
     $ch = curl_init($wynnItemUrl);
 
@@ -29,11 +31,11 @@ function searchitems() {
 
     curl_close($ch);
 
-    $itemdata = json_decode($response, true);
+    $results = json_decode($response, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         die('Error decoding JSON response.');
     }
-    print_r($itemdata);
+    return listitems($results);
 }
 ?>

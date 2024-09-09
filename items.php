@@ -11,12 +11,61 @@ include 'icl/listfilteroptions.inc.php';
     <title>Wynn items</title>
     <style>
         body {
-            width: 100vw;
             font-family: Arial, sans-serif;
+            padding: 0px;
+            margin: 0px;
         }
         #itemmetadata {
             display: none
         }
+
+        #query {
+            margin: 10px;
+        }
+
+        #pagenavigation {
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 500px;
+            font-size: 26px;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #itemcards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+        .itemcard {
+             width: 300px;
+             height: 600px;
+             background: orange;
+             border: 2px solid black;
+        }
+        .internalName {
+            margin-top: 20px;
+        }
+        .base {
+            margin-top: 10px;
+        }
+        .requirements {
+            margin-top: 10px;
+        }
+        .identifications {
+            margin-top: 10px;
+        }
+        .powderSlots {
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 
@@ -32,18 +81,7 @@ include 'icl/listfilteroptions.inc.php';
         return document.getElementById(str);
     }
 
-    function searchitems() {
-  //   "query": [str],
-  //   "type": [str, list],
-  //   "tier": [int, list, str],
-  //   "attackSpeed": [str, list],
-  //   "levelRange": [int, list],
-  //   "professions": [str, list],
-  //   "identifications": [str, list],
-  //   [
-  //   [
-    //]
-  //   "majorIds": [str, list],
+    function searchitems(page) {
         var query = encodeURI(gid('query').value) || undefined;
         var type = [];
         var types = gid('types').getElementsByTagName('input');
@@ -51,15 +89,6 @@ include 'icl/listfilteroptions.inc.php';
             if (types[i].checked) type.push(types[i].value);
         }
         
-        //var tier = encodeURI(gid('tier').value);
-        //var attackSpeed = encodeURI(gid('attackSpeed').value);
-        //var levelRange = encodeURI(gid('levelRange').value);
-        //var professions = encodeURI(gid('professions').value);
-        //var identifications = encodeURI(gid('identifications').value);
-        //var majorIds = encodeURI(gid('majorIds').value);
-
-        // Here i am doing something similar to their website in which you have to put at least 3 letters in.
-
         //if (query.length < 3) {
         //    gid("iteminfo").innerHTML = ""; 
         //    return;
@@ -69,6 +98,7 @@ include 'icl/listfilteroptions.inc.php';
             type: 'GET',
             url: 'services.php',
             data: { 
+                page: page,
                 cmd: 'searchitems',  
                 query: query,
                 type: type,
