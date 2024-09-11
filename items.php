@@ -64,6 +64,10 @@ include 'icl/listfilteroptions.inc.php';
             width: 40px;
         }
 
+        .ident {
+            display: block;
+        }
+
     </style>
 </head>
 
@@ -86,6 +90,7 @@ include 'icl/listfilteroptions.inc.php';
         var types = []; // everything else
         var skipfilter = {}; // keeps track of main filters to not add to types
         var levelRange = [];
+        var identifications = JSON.parse(gid("identsearchlist").value);
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
@@ -132,13 +137,12 @@ include 'icl/listfilteroptions.inc.php';
             // if its checked, and there is no sub checkbox checked we add it
             if (t.checked) tier.push(t.value);
         }
-        console.log(tier);
         //console.log("types: "+types);
         //console.log("professions: "+professions);
         //console.log("attackSpeed: "+attackSpeed);
         //console.log("==================================================");
         
-        //if (query.length < 3) {
+        //if (query && query.length < 3) {
         //    gid("iteminfo").innerHTML = ""; 
         //    return;
         //}
@@ -152,6 +156,7 @@ include 'icl/listfilteroptions.inc.php';
                 query: query,
                 type: types,
                 attackSpeed: attackSpeed,
+                identifications: identifications,
                 professions: professions,
                 levelRange: levelRange,
                 tier: tier
@@ -163,6 +168,34 @@ include 'icl/listfilteroptions.inc.php';
                 console.log(error);
             }
         });
+    }
+
+    function autocompleteident() {
+        var userinput = (gid('identificationsinput').value).toLowerCase();
+        var ul = gid('identificationslist'); 
+        var li = ul.getElementsByTagName("li");
+        var amountshown = 0;
+        var amountcap = 5;
+        for (var i = 0; i < li.length; i++) {
+            var a = li[i].getElementsByTagName("a")[0];
+            li[i].style.display = "none";
+        }
+        for (var i = 0; i < li.length; i++) {
+            var a = li[i].getElementsByTagName("a")[0];
+            var txt = (a.textContent || a.innerText).toLowerCase();
+            if (txt.includes(userinput)) {
+               li[i].style.display = "block"; 
+                amountshown++;
+            }
+            if (amountshown > amountcap) return;
+        }
+    }
+
+    function addtoidents(d) {
+        var val = gid('identsearchlist').value;
+        var data = JSON.parse(val);
+        data.push(d.innerText);
+        gid('identsearchlist').innerText = JSON.stringify(data); 
     }
 
     function mainfilterclicked(d) {

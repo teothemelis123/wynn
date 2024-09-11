@@ -3,14 +3,41 @@ include 'icl/itemmetadata.inc.php';
 function listfilteroptions() {
     $metadata = itemmetadata();
     $advancedfilters = $metadata['filters']['advanced'];
+
     $identifications = $metadata['identifications'];
-    $majorIds = $metadata['majorIds'];
+    $majorids = $metadata['majorIds'];
+
+    $identifications = array_merge($identifications, $majorids);
+
+    $encodedidents = json_encode($identifications);
+    
+
     $filters = $metadata['filters'];
     $types = $filters['type'];
     $tiertypes = $filters['tier']; // ['items'] and ['ingredients'] are in tier
     $levelRange = $filters['levelRange']; // ['items'] and ['ingredients'] are in tier
 ?>
 <button onclick="searchitems()">Apply filters</button>
+
+<div id="identificationscontainer">
+    <label for="identificationsinput">identification:</label>
+    <input id="identificationsinput" onkeyup="autocompleteident(); return false"></input>
+    <ul id="identificationslist">
+        <?php
+        foreach ($identifications as $ident) {
+        ?>
+            <li class="hidden"><a href=# onclick="addtoidents(this); return false;"><?php echo $ident; ?></a></Li>
+        <?php
+        }
+        ?>
+    </ul>
+</div>
+<p>current idents:</p>
+<textarea id="identsearchlist">[]</textarea>
+<!--
+<textarea id="identifications" class="hidden ident"><?php echo $encodedidents; ?></textarea>
+<textarea id="majorids" class="hidden ident"><?php echo $encodedmajorids; ?></textarea>
+-->
 
 <div id="types">
     <div>
