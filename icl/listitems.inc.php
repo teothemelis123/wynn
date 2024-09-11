@@ -10,7 +10,7 @@ function listitems($results) {
     ?>
     <div id="itemcards">
     <?php
-    foreach ($items as $itemname => $item) {
+    foreach ($items as $item) {
     ?>
     <div class="itemcard">
     <?php
