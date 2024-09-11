@@ -13,8 +13,38 @@ function listfilteroptions() {
 <button onclick="searchitems()">Apply filters</button>
 
 <div id="types">
-
     <div>
+    <p>ingredient tiers:</p
+    <?php
+        foreach ($tiertypes['ingredients'] as $key => $val) {
+            ?>
+                    <input type="checkbox" 
+                           class="itemtier" 
+                           id="itemtier_<?php echo $key; ?>" 
+                           value="<?php echo $val; ?>"
+                    />
+                    <label for="itemtier_<?php echo $key; ?>"><?php echo $val; ?></label>
+            <?php 
+        } // inner for each
+    ?>
+    </div>
+    <div>
+    <p>item tiers:</p
+    <?php
+        foreach ($tiertypes['items'] as $key => $val) {
+            ?>
+                    <input type="checkbox" 
+                           class="itemtier" 
+                           id="itemtier_<?php echo $key; ?>" 
+                           value="<?php echo $val; ?>"
+                    />
+                    <label for="itemtier_<?php echo $key; ?>"><?php echo $val; ?></label>
+            <?php 
+        } // inner for each
+    ?>
+    </div>
+    
+    <div id="levelrangecontainer">
         <p>level range</p>
         <input type="number" id="levelrangemin" class="range" name="levelrangemin" value="0" min="0" max="<?php echo $levelRange['items'];?>" />
         to
@@ -68,7 +98,6 @@ function listfilteroptions() {
                     <input type="checkbox" 
                            class="advancedfilter <?php echo $name;?>" 
                            id="advancedtype_<?php echo $key; ?>" 
-                           name="typefilter" 
                            value="<?php echo $val; ?>"
                     />
                     <label for="advancedtype_<?php echo $key; ?>"><?php echo $val; ?></label>

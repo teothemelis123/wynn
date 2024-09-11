@@ -86,6 +86,7 @@ include 'icl/listfilteroptions.inc.php';
         var types = []; // everything else
         var skipfilter = {}; // keeps track of main filters to not add to types
         var levelRange = [];
+        var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
             if (t.checked) {
@@ -124,6 +125,14 @@ include 'icl/listfilteroptions.inc.php';
 
         levelRange[0] = parseInt(gid('levelrangemin').value, 10);
         levelRange[1] = parseInt(gid('levelrangemax').value, 10);
+
+        
+        var tierelements = document.getElementsByClassName('itemtier');
+        for (var t of tierelements) {
+            // if its checked, and there is no sub checkbox checked we add it
+            if (t.checked) tier.push(t.value);
+        }
+        console.log(tier);
         //console.log("types: "+types);
         //console.log("professions: "+professions);
         //console.log("attackSpeed: "+attackSpeed);
@@ -144,7 +153,8 @@ include 'icl/listfilteroptions.inc.php';
                 type: types,
                 attackSpeed: attackSpeed,
                 professions: professions,
-                levelRange: levelRange
+                levelRange: levelRange,
+                tier: tier
             },
             success: function (response) {
                 gid("iteminfo").innerHTML = response;
