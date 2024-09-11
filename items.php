@@ -60,6 +60,10 @@ include 'icl/listfilteroptions.inc.php';
             display: none;
         }
 
+        .range {
+            width: 40px;
+        }
+
     </style>
 </head>
 
@@ -81,6 +85,7 @@ include 'icl/listfilteroptions.inc.php';
         var professions = []; // advanced crafting, and advanced gathering
         var types = []; // everything else
         var skipfilter = {}; // keeps track of main filters to not add to types
+        var levelRange = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
             if (t.checked) {
@@ -116,10 +121,13 @@ include 'icl/listfilteroptions.inc.php';
             // if its checked, and there is no sub checkbox checked we add it
             if (t.checked && !skipfilter[t.value]) types.push(t.value);
         }
-        console.log("types: "+types);
-        console.log("professions: "+professions);
-        console.log("attackSpeed: "+attackSpeed);
-        console.log("==================================================");
+
+        levelRange[0] = parseInt(gid('levelrangemin').value, 10);
+        levelRange[1] = parseInt(gid('levelrangemax').value, 10);
+        //console.log("types: "+types);
+        //console.log("professions: "+professions);
+        //console.log("attackSpeed: "+attackSpeed);
+        //console.log("==================================================");
         
         //if (query.length < 3) {
         //    gid("iteminfo").innerHTML = ""; 
@@ -135,7 +143,8 @@ include 'icl/listfilteroptions.inc.php';
                 query: query,
                 type: types,
                 attackSpeed: attackSpeed,
-                professions: professions
+                professions: professions,
+                levelRange: levelRange
             },
             success: function (response) {
                 gid("iteminfo").innerHTML = response;

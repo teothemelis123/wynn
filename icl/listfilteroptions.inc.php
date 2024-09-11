@@ -3,15 +3,27 @@ include 'icl/itemmetadata.inc.php';
 function listfilteroptions() {
     $metadata = itemmetadata();
     $advancedfilters = $metadata['filters']['advanced'];
-    #$identifications = $metadata['identifications'];
+    $identifications = $metadata['identifications'];
+    $majorIds = $metadata['majorIds'];
     $filters = $metadata['filters'];
     $types = $filters['type'];
+    $tiertypes = $filters['tier']; // ['items'] and ['ingredients'] are in tier
+    $levelRange = $filters['levelRange']; // ['items'] and ['ingredients'] are in tier
 ?>
 <button onclick="searchitems()">Apply filters</button>
 
 <div id="types">
-    <legend>Please select a type filter:</legend>
 
+    <div>
+        <p>level range</p>
+        <input type="number" id="levelrangemin" class="range" name="levelrangemin" value="0" min="0" max="<?php echo $levelRange['items'];?>" />
+        to
+        <input type="number" id="levelrangemax" class="range" name="levelrangemax" value="<?php echo $levelRange['items'];?>" min="0" max="<?php echo $levelRange['items'];?>" />
+    </div>
+    <div>
+    </div>
+
+    <legend>Please select a type filter:</legend>
     <?php
     foreach ($types as $typeidx => $type) { // show default categories (armor, accessories tools, etc)
     ?>
