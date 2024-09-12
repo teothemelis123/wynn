@@ -172,20 +172,18 @@ include 'icl/listfilteroptions.inc.php';
 
     function autocompleteident() {
         var userinput = (gid('identificationsinput').value).toLowerCase();
-        var ul = gid('identificationslist'); 
-        var li = ul.getElementsByTagName("li");
+        var div = gid('identificationslist'); 
+        var atags = div.getElementsByTagName("a");
         var amountshown = 0;
         var amountcap = 5;
-        for (var i = 0; i < li.length; i++) {
-            var a = li[i].getElementsByTagName("a")[0];
-            li[i].style.display = "none";
+        for (const a of atags) {
+            a.style.display = "none";
         }
-        for (var i = 0; i < li.length; i++) {
-            var a = li[i].getElementsByTagName("a")[0];
+        for (const a of atags) {
             var txt = (a.textContent || a.innerText).toLowerCase();
             if (txt.includes(userinput)) {
-               li[i].style.display = "block"; 
-                amountshown++;
+               a.style.display = "block"; 
+               amountshown++;
             }
             if (amountshown > amountcap) return;
         }

@@ -9,9 +9,6 @@ function listfilteroptions() {
 
     $identifications = array_merge($identifications, $majorids);
 
-    $encodedidents = json_encode($identifications);
-    
-
     $filters = $metadata['filters'];
     $types = $filters['type'];
     $tiertypes = $filters['tier']; // ['items'] and ['ingredients'] are in tier
@@ -22,22 +19,19 @@ function listfilteroptions() {
 <div id="identificationscontainer">
     <label for="identificationsinput">identification:</label>
     <input id="identificationsinput" onkeyup="autocompleteident(); return false"></input>
-    <ul id="identificationslist">
+
+    <div id="identificationslist">
         <?php
         foreach ($identifications as $ident) {
         ?>
-            <li class="hidden"><a href=# onclick="addtoidents(this); return false;"><?php echo $ident; ?></a></Li>
+            <a class="hidden" href=# onclick="addtoidents(this); return false;"><?php echo $ident; ?></a>
         <?php
         }
         ?>
-    </ul>
+    </div>
 </div>
 <p>current idents:</p>
 <textarea id="identsearchlist">[]</textarea>
-<!--
-<textarea id="identifications" class="hidden ident"><?php echo $encodedidents; ?></textarea>
-<textarea id="majorids" class="hidden ident"><?php echo $encodedmajorids; ?></textarea>
--->
 
 <div id="types">
     <div>
