@@ -41,10 +41,10 @@ function listfilteroptions() {
             ?>
                     <input type="checkbox" 
                            class="itemtier" 
-                           id="itemtier_<?php echo $key; ?>" 
+                           id="ingredienttier_<?php echo $key; ?>" 
                            value="<?php echo $val; ?>"
                     />
-                    <label for="itemtier_<?php echo $key; ?>"><?php echo $val; ?></label>
+                    <label for="ingredienttier_<?php echo $key; ?>"><?php echo $val; ?></label>
             <?php 
         } // inner for each
     ?>

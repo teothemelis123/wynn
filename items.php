@@ -50,9 +50,11 @@ include 'icl/listfilteroptions.inc.php';
              background: orange;
              border: 2px solid black;
         }
+
         .internalName{
             margin-top: 20px;
         }
+
         .base, .requirements, .identifications, .powderslots{
             margin-top: 10px;
         }
