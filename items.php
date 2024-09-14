@@ -70,8 +70,10 @@ include 'icl/listfilteroptions.inc.php';
         .base, .requirements, .identifications, .powderslots {
             margin-top: 20px;
         }
+
         .hidden {
             display: none;
+            min-height: 50px;
         }
 
         .range {
@@ -81,29 +83,34 @@ include 'icl/listfilteroptions.inc.php';
         .ident {
             display: block;
         }
-/*
-        .normal {
-            color: rgb(255, 255, 255);
+
+        .zoom {
+            padding: 10px 20px;
+            margin: 20px 10px;
+            background: rgba(200, 200, 200);
+            transition: transform .2s;
+            text-align: center;
+            border-radius: 15px;
         }
-        .unique {
-            color: rgb(252, 252, 84);
+
+        .advancedfilter {
+            margin-top: 10px;
         }
-        .rare {
-            color: rgb(255, 80, 232);
+
+        .advancedfiltercontainer {
+            margin-top: 10px;
+            min-height: 50px;
         }
-        .legendary {
-            color: rgb(80, 253, 255);
+
+        .zoom:hover {
+            cursor: pointer;
+            transform: scale(1.15);
         }
-        .fabled {
-            color: rgb(246, 62, 62);
+        
+        .flex {
+            display: flex;
         }
-        .set {
-            color: rgb(56, 229, 37);
-        }
-        .mythic {
-            color: rgb(164, 57, 192);
-        }
-*/
+        
     </style>
 </head>
 
@@ -115,6 +122,16 @@ include 'icl/listfilteroptions.inc.php';
 <div id="iteminfo"></div>
 
 <script>
+    function togglebox(d) {
+        if (!d.toggled) {
+            d.toggled = true;
+            d.style.background = "rgba(80, 80, 80)";
+        } else {
+            d.toggled = false;
+            d.style.background = "rgba(200, 200, 200)";
+;
+        }
+    }
     function gid(str) {
         return document.getElementById(str);
     }
@@ -130,11 +147,11 @@ include 'icl/listfilteroptions.inc.php';
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
-            if (t.checked) {
+            if (t.toggled) {
                 if (t.classList.contains('checkbox_attackSpeed')) {
-                    attackSpeed.push(t.value);
+                    attackSpeed.push(t.id);
                 } else if (t.classList.contains('checkbox_profession')) {
-                    professions.push(t.value);
+                    professions.push(t.innerHTML);
                 } else {
                     // for weapon, armor, accessory, tome, tool...
                     // lets say we have weapon checked AND bow checked, we must
@@ -152,7 +169,7 @@ include 'icl/listfilteroptions.inc.php';
                             skipfilter[maincheckboxname] = true;
                         }
                     }
-                    types.push(t.value);
+                    types.push(t.innerHTML);
                 }
             }
         }
@@ -161,7 +178,7 @@ include 'icl/listfilteroptions.inc.php';
         typeselements = document.getElementsByClassName('filter');
         for (var t of typeselements) {
             // if its checked, and there is no sub checkbox checked we add it
-            if (t.checked && !skipfilter[t.value]) types.push(t.value);
+            if (t.toggled && !skipfilter[t.innerHTML]) types.push(t.innerHTML);
         }
 
         levelRange[0] = parseInt(gid('levelrangemin').value, 10);
@@ -171,17 +188,8 @@ include 'icl/listfilteroptions.inc.php';
         var tierelements = document.getElementsByClassName('itemtier');
         for (var t of tierelements) {
             // if its checked, and there is no sub checkbox checked we add it
-            if (t.checked) tier.push(t.value);
+            if (t.toggled) tier.push(t.innerHTML);
         }
-        //console.log("types: "+types);
-        //console.log("professions: "+professions);
-        //console.log("attackSpeed: "+attackSpeed);
-        //console.log("==================================================");
-        
-        //if (query && query.length < 3) {
-        //    gid("iteminfo").innerHTML = ""; 
-        //    return;
-        //}
 
         $.ajax({
             type: 'GET',
@@ -234,16 +242,16 @@ include 'icl/listfilteroptions.inc.php';
     }
 
     function mainfilterclicked(d) {
-        var filters = document.getElementsByClassName(d.value+'_advancedfiltercontainer');
+        var filters = document.getElementsByClassName(d.innerHTML+'_advancedfiltercontainer');
         for (var i = 0; i < filters.length; i++) {
-            if (d.checked) {
-                filters[i].style.display = 'block';
+            if (d.toggled) {
+                filters[i].style.display = 'flex';
             } else {
                 filters[i].style.display = 'none'; // hide the div
                 // set all checkboxes in that div to false
-                var inputs = filters[i].getElementsByTagName('input');
-                for (var j = 0; j < inputs.length; j++) {
-                inputs[j].checked = false; 
+                var els = filters[i].getElementsByTagName('div');
+                for (var j = 0; j < els.length; j++) {
+                    if (els[j].toggled) togglebox(els[j]);
                 }
             }
         }

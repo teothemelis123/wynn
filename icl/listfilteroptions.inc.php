@@ -1,5 +1,6 @@
 <?php
 include 'icl/itemmetadata.inc.php';
+include 'icl/cleaninfo.inc.php';
 function listfilteroptions() {
     $metadata = itemmetadata();
     $advancedfilters = $metadata['filters']['advanced'];
@@ -34,24 +35,22 @@ function listfilteroptions() {
 <textarea id="identsearchlist">[]</textarea>
 
 <div id="types">
-    <div>
+    <div class="flex">
     <p>ingredient tiers:</p>
     <?php
         foreach ($tiertypes['ingredients'] as $key => $val) {
             ?>
-                    <input type="checkbox" class="itemtier" id="ingredienttier_<?php echo $key; ?>" value="<?php echo $val; ?>" />
-                    <label for="ingredienttier_<?php echo $key; ?>"><?php echo $val; ?></label>
+                <span class="itemtier zoom" onclick="togglebox(this);"><?php echo $val; ?></span>
             <?php 
         } // inner for each
     ?>
     </div>
-    <div>
+    <div class="flex">
     <p>item tiers:</p>
     <?php
         foreach ($tiertypes['items'] as $key => $val) {
             ?>
-                    <input type="checkbox" class="itemtier" id="itemtier_<?php echo $key; ?>" value="<?php echo $val; ?>" />
-                    <label for="itemtier_<?php echo $key; ?>"><?php echo $val; ?></label>
+                    <span class="itemtier zoom" onclick="togglebox(this);"><?php echo $val; ?></span>
             <?php 
         } // inner for each
     ?>
@@ -63,20 +62,19 @@ function listfilteroptions() {
         to
         <input type="number" id="levelrangemax" class="range" name="levelrangemax" value="<?php echo $levelRange['items'];?>" min="0" max="<?php echo $levelRange['items'];?>" />
     </div>
-    <div>
-    </div>
 
     <legend>Please select a type filter:</legend>
+    <div class="flex">
     <?php
     foreach ($types as $typeidx => $type) { // show default categories (armor, accessories tools, etc)
     ?>
 
-      <input onclick="mainfilterclicked(this);"type="checkbox" class="filter" id="type_<?php echo $typeidx; ?>" name="typefilter" value="<?php echo $type; ?>"/>
-      <label for="type_<?php echo $typeidx; ?>"><?php echo $type; ?></label>
+      <span onclick="togglebox(this); mainfilterclicked(this);" class="filter zoom" id="type_<?php echo $typeidx; ?>" name="typefilter"><?php echo $type; ?></span>
 
     <?php
         } // foreach
     ?>
+    </div>
     <div id="advancedcategories">
         <?php 
         foreach ($advancedfilters as $name => $arr) {
@@ -90,7 +88,7 @@ function listfilteroptions() {
             }
             if ($containername == "attackSpeed") $containername = "weapon";
             ?>
-            <div class="<?php echo $containername; ?>_advancedfiltercontainer hidden">
+            <div class="<?php echo $containername; ?>_advancedfiltercontainer hidden advancedfiltercontainer">
             <?php
             switch ($name) {
             // attackspeed should be grouped with the weapon checkbox, so we 
@@ -106,14 +104,9 @@ function listfilteroptions() {
             }
             ?>
                 <?php
-                foreach ($arr as $key => $val) {
+                foreach ($arr as $val) {
                     ?>
-                    <input type="checkbox" 
-                           class="advancedfilter <?php echo $name;?>" 
-                           id="advancedtype_<?php echo $key; ?>" 
-                           value="<?php echo $val; ?>"
-                    />
-                    <label for="advancedtype_<?php echo $key; ?>"><?php echo $val; ?></label>
+                    <div onclick="togglebox(this)" class="zoom advancedfilter <?php echo $name;?>" id="<?php echo $val; ?>" ><?php echo cleaninfo($val); ?></div>
                     <?php 
                 } // inner for each
                 ?>
