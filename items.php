@@ -11,10 +11,11 @@ include 'icl/listfilteroptions.inc.php';
     <title>Wynn items</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Brush Script MT', cursive;
             padding: 0px;
             margin: 0px;
         }
+        
         #itemmetadata {
             display: none
         }
@@ -38,23 +39,33 @@ include 'icl/listfilteroptions.inc.php';
             margin: 0;
             padding: 0;
         }
-        
+
         #itemcards {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-evenly;
+            color: rgba(220, 220, 220);
         }
+
         .itemcard {
-             width: 300px;
-             height: 600px;
-             background: orange;
-             border: 2px solid black;
+            width: 300px;
+            background: rgba(80, 80, 80);
+            font-size: 24px;
+            box-shadow: 4px 4px #000000;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px;
         }
+
+        .internalName, .attackSpeed {
+            text-align: center;
+        }
+
         .internalName{
-            margin-top: 20px;
+            margin-top: 30px;
         }
+
         .base, .requirements, .identifications, .powderslots{
-            margin-top: 10px;
+            margin-top: 20px;
         }
         .hidden {
             display: none;
@@ -66,6 +77,27 @@ include 'icl/listfilteroptions.inc.php';
 
         .ident {
             display: block;
+        }
+        .normal {
+            color: rgb(255, 255, 255)
+        }
+        .unique {
+            color: rgb(252, 252, 84)
+        }
+        .rare {
+            color: rgb(255, 80, 232)
+        }
+        .legendary {
+            color: rgb(80, 253, 255)
+        }
+        .fabled {
+            color: rgb(246, 62, 62)
+        }
+        .set {
+            color: rgb(56, 229, 37)
+        }
+        .mythic {
+            color: rgb(164, 57, 192)
         }
 
     </style>
@@ -169,6 +201,7 @@ include 'icl/listfilteroptions.inc.php';
             }
         });
     }
+    searchitems();
 
     function autocompleteident() {
         var userinput = (gid('identificationsinput').value).toLowerCase();

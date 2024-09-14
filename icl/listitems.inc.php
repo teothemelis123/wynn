@@ -1,4 +1,5 @@
 <?php
+include "cleaninfo.inc.php";
 function listitems($results) {
     if (isset($results['Error'])) exit();
     $controller = $results['controller'];
@@ -14,16 +15,22 @@ function listitems($results) {
     ?>
     <div class="itemcard">
     <?php
+        $textcolor = "";
+        if (isset($item['rarity'])) {
+            $textcolor = $item['rarity'];
+        }
         if (isset($item["internalName"])) {
             ?>
-                <p class="internalName"><?php echo $item["internalName"]; ?></p> 
+                <p class="internalName <?php echo $textcolor; ?>"><?php echo cleaninfo($item["internalName"]); ?></p> 
             <?php
         }
+
         if (isset($item["attackSpeed"])) {
             ?>
-                <p class="attackSpeed"><?php echo $item["attackSpeed"]; ?></p> 
+                <p class="attackSpeed"><?php echo cleaninfo($item["attackSpeed"]); ?></p> 
             <?php
         }
+
         if (isset($item["base"])) {
             ?>
             <div class="base">
@@ -31,11 +38,11 @@ function listitems($results) {
                 forEach($item["base"] as $dmgtype => $dmgval) {
                     if (is_array($dmgval)) {
                 ?>
-                    <p><?php echo $dmgtype." ".$dmgval["min"].'-'.$dmgval["max"]; ?></p> 
+                    <p><?php echo cleaninfo($dmgtype)." ".$dmgval["min"].'-'.$dmgval["max"]; ?></p> 
                     <?php
                     } else {
                     ?>
-                    <p><?php echo $dmgtype." ".$dmgval; ?></p> 
+                    <p><?php echo cleaninfo($dmgtype)." ".$dmgval; ?></p> 
                     <?php
                     }
                     ?>
@@ -81,11 +88,11 @@ function listitems($results) {
             forEach($item["identifications"] as $identype => $idenval) {
                 if (is_array($idenval)) {
                     ?>
-                        <p><?php echo $idenval["min"]." to ".$idenval["max"]." ".$identype; ?></p> 
+                        <p><?php echo $idenval["min"]." to ".$idenval["max"]." ".cleaninfo($identype); ?></p> 
                     <?php
                 } else {
                     ?>
-                        <p><?php echo $idenval." ".$identype?></p> 
+                        <p><?php echo $idenval." ".cleaninfo($identype); ?></p> 
                     <?php
                 }
             }
@@ -100,7 +107,7 @@ function listitems($results) {
         }
         if (isset($item["rarity"])) {
             ?>
-                <p class="rarity"><?php echo $item["rarity"]; ?> Item</p> 
+                <p class="rarity <?php echo $textcolor; ?>"><?php echo $item["rarity"]; ?> Item</p> 
             <?php
         }
         if (isset($item["lore"])) {
@@ -122,7 +129,7 @@ function listitems($results) {
                 $thispage = $currpage + $i;
                 if ($thispage > $totalpages) break; // dont allow links to pages past the page limit
             ?>
-            <a href=# onclick="searchitems(<?php echo $thispage ?>); return false"><?php echo $thispage ?></a>
+            <a href=# onclick="searchitems(<?php echo $thispage ?>);"><?php echo $thispage ?></a>
                 
             <?php
                 
