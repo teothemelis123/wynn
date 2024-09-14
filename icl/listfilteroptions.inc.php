@@ -35,30 +35,22 @@ function listfilteroptions() {
 
 <div id="types">
     <div>
-    <p>ingredient tiers:</p
+    <p>ingredient tiers:</p>
     <?php
         foreach ($tiertypes['ingredients'] as $key => $val) {
             ?>
-                    <input type="checkbox" 
-                           class="itemtier" 
-                           id="ingredienttier_<?php echo $key; ?>" 
-                           value="<?php echo $val; ?>"
-                    />
+                    <input type="checkbox" class="itemtier" id="ingredienttier_<?php echo $key; ?>" value="<?php echo $val; ?>" />
                     <label for="ingredienttier_<?php echo $key; ?>"><?php echo $val; ?></label>
             <?php 
         } // inner for each
     ?>
     </div>
     <div>
-    <p>item tiers:</p
+    <p>item tiers:</p>
     <?php
         foreach ($tiertypes['items'] as $key => $val) {
             ?>
-                    <input type="checkbox" 
-                           class="itemtier" 
-                           id="itemtier_<?php echo $key; ?>" 
-                           value="<?php echo $val; ?>"
-                    />
+                    <input type="checkbox" class="itemtier" id="itemtier_<?php echo $key; ?>" value="<?php echo $val; ?>" />
                     <label for="itemtier_<?php echo $key; ?>"><?php echo $val; ?></label>
             <?php 
         } // inner for each

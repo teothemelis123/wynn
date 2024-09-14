@@ -12,8 +12,9 @@ include 'icl/listfilteroptions.inc.php';
     <style>
         body {
             font-family: 'Brush Script MT', cursive;
-            padding: 0px;
+            padding: 10px;
             margin: 0px;
+            background: rgba(225, 225, 225);
         }
         
         #itemmetadata {
@@ -43,15 +44,17 @@ include 'icl/listfilteroptions.inc.php';
         #itemcards {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-evenly;
             color: rgba(220, 220, 220);
         }
 
         .itemcard {
-            width: 300px;
-            background: rgba(80, 80, 80);
-            font-size: 24px;
+            width: 30vh;
+            background: rgba(28, 0, 16);
+            font-size: 18px;
             box-shadow: 4px 4px #000000;
             border-radius: 15px;
+            border: 2px solid black;
             padding: 15px;
             margin: 15px;
         }
@@ -64,7 +67,7 @@ include 'icl/listfilteroptions.inc.php';
             margin-top: 30px;
         }
 
-        .base, .requirements, .identifications, .powderslots{
+        .base, .requirements, .identifications, .powderslots {
             margin-top: 20px;
         }
         .hidden {
@@ -78,28 +81,29 @@ include 'icl/listfilteroptions.inc.php';
         .ident {
             display: block;
         }
+/*
         .normal {
-            color: rgb(255, 255, 255)
+            color: rgb(255, 255, 255);
         }
         .unique {
-            color: rgb(252, 252, 84)
+            color: rgb(252, 252, 84);
         }
         .rare {
-            color: rgb(255, 80, 232)
+            color: rgb(255, 80, 232);
         }
         .legendary {
-            color: rgb(80, 253, 255)
+            color: rgb(80, 253, 255);
         }
         .fabled {
-            color: rgb(246, 62, 62)
+            color: rgb(246, 62, 62);
         }
         .set {
-            color: rgb(56, 229, 37)
+            color: rgb(56, 229, 37);
         }
         .mythic {
-            color: rgb(164, 57, 192)
+            color: rgb(164, 57, 192);
         }
-
+*/
     </style>
 </head>
 
