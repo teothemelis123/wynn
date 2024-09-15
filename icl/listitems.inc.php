@@ -12,9 +12,11 @@ function listitems($results) {
     <div id="itemcards">
     <?php
     $textcolor = "rgb(255, 255, 255)";
+    $glowing = false;
     foreach ($items as $item) {
         if (isset($item['rarity'])) {
             $boxshadow = "rgb(0, 0, 0)";
+            $glowing = false;
             switch($item['rarity']) {
                 case 'normal': $textcolor = "rgb(255, 255, 255)"; break; 
                 case 'unique': $textcolor = "rgb(252, 252, 84)"; break;
@@ -22,16 +24,16 @@ function listitems($results) {
                 case 'legendary': $textcolor = "rgb(80, 253, 255)"; break;
                 case 'fabled': $textcolor = "rgb(246, 62, 62)"; $boxshadow = "rgb(246, 62, 62, 0.6)" ; break;
                 case 'set': $textcolor = "rgb(56, 229, 37)"; break;
-                case 'mythic': $textcolor = "rgb(164, 57, 192)"; $boxshadow = "rgb(164, 57, 192, 0.6)" ; break;
+                case 'mythic': $textcolor = "rgb(164, 57, 192)"; $boxshadow = "rgb(164, 57, 192, 0.6)"; $glowing = true; break;
                 default: $textcolor = "rgb(255, 255, 255)"; break;
             }
     }
     ?>
-    <div class="itemcard" style="box-shadow: 6px 6px <?php echo $boxshadow; ?>">
+    <div class="itemcard<?php if ($glowing) echo ' glowing'; ?>" style="box-shadow: 6px 6px <?php echo $boxshadow; ?>">
     <?php
         if (isset($item["internalName"])) {
             ?>
-                <p class="internalName" style="color: <?php echo $textcolor; ?>"><?php echo cleaninfo($item["internalName"]); ?></p> 
+                <p class="internalName<?php if ($glowing) echo ' glowing'; ?>" style="color: <?php echo $textcolor; ?>"><?php echo cleaninfo($item["internalName"]); ?></p> 
             <?php
         }
 
@@ -119,7 +121,7 @@ function listitems($results) {
 
         if (isset($item["rarity"])) {
             ?>
-                <p class="rarity" style="color: <?php echo $textcolor; ?>"><?php echo $item["rarity"]; ?> Item</p> 
+                <p class="rarity<?php if ($glowing) echo ' glowing'; ?>" style="color: <?php echo $textcolor; ?>"><?php echo $item["rarity"]; ?> Item</p> 
             <?php
         }
 

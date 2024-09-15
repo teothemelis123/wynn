@@ -17,6 +17,11 @@ include 'icl/listfilteroptions.inc.php';
             background: rgba(225, 225, 225);
         }
         
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
         #itemmetadata {
             display: none
         }
@@ -36,16 +41,23 @@ include 'icl/listfilteroptions.inc.php';
             font-size: 26px;
         }
 
-        p {
-            margin: 0;
-            padding: 0;
-        }
-
         #itemcards {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-evenly;
             color: rgba(220, 220, 220);
+        }
+
+        .fadeout {
+          visibility: hidden;
+          opacity: 0;
+          transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+        }
+
+        .fadein {
+          visibility: visible;
+          opacity: 1;
+          transition-delay: 0ms;
         }
 
         .itemcard {
@@ -91,6 +103,12 @@ include 'icl/listfilteroptions.inc.php';
             transition: transform .2s;
             text-align: center;
             border-radius: 15px;
+            transition: all 0.3s ease; /* Transition for all properties */
+        }
+
+        .zoom.transitioned {
+            background-color: rgba(100, 100, 100);
+            transform: scale(1);
         }
 
         .advancedfilter {
@@ -106,10 +124,20 @@ include 'icl/listfilteroptions.inc.php';
             cursor: pointer;
             transform: scale(1.15);
         }
-        
+
+        .glowing{
+          animation: glowingbg 1.5s 0s linear infinite alternate;
+        }
+
+        @keyframes glowingbg{
+          from   {background:rgb(28, 0, 16)}
+          to     {background:rgba(84, 7, 112)}
+        }
+
         .flex {
             display: flex;
         }
+
         
     </style>
 </head>
@@ -117,26 +145,30 @@ include 'icl/listfilteroptions.inc.php';
 <body>
 <a href="index.php">Home</a>
 
-<input id="query" onkeyup="searchitems(); return false;" placeholder="Item name"></input>
+<input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
 <div id="filters"><?php listfilteroptions(); ?></div>
 <div id="iteminfo"></div>
 
 <script>
+    function itemnametyped() {
+        if (this.timer) clearTimeout(this.timer);
+        this.timer = setTimeout(function() { searchitems(); }, 500); 
+    }
+
     function togglebox(d) {
-        if (!d.toggled) {
-            d.toggled = true;
-            d.style.background = "rgba(80, 80, 80)";
-        } else {
-            d.toggled = false;
-            d.style.background = "rgba(200, 200, 200)";
-;
-        }
+        d.classList.toggle('transitioned');
+        d.toggled = !d.toggled;
+        searchitems(); 
     }
     function gid(str) {
         return document.getElementById(str);
     }
 
     function searchitems(page) {
+        var items = gid('itemcards');
+
+        if (items) items.style.filter = "blur(5px)";
+
         var query = encodeURI(gid('query').value) || undefined;
         var attackSpeed = []; // attack speed only
         var professions = []; // advanced crafting, and advanced gathering
@@ -207,6 +239,7 @@ include 'icl/listfilteroptions.inc.php';
             },
             success: function (response) {
                 gid("iteminfo").innerHTML = response;
+                if (items) items.style.filter = "blur(0px)";
             },
             error: function (error) {
                 console.log(error);
@@ -257,19 +290,6 @@ include 'icl/listfilteroptions.inc.php';
         }
 
     }
-
-function debounce(func, delay) {
-        let timeout;
-        return function() {
-            const context = this;
-            const args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
-
-    const debouncedSearch = debounce(searchitems, 300);
-
 
 </script>
 </body>

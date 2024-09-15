@@ -15,8 +15,6 @@ function listfilteroptions() {
     $tiertypes = $filters['tier']; // ['items'] and ['ingredients'] are in tier
     $levelRange = $filters['levelRange']; // ['items'] and ['ingredients'] are in tier
 ?>
-<button onclick="searchitems()">Apply filters</button>
-
 <div id="identificationscontainer">
     <label for="identificationsinput">identification:</label>
     <input id="identificationsinput" onkeyup="autocompleteident(); return false"></input>
@@ -38,7 +36,7 @@ function listfilteroptions() {
     <div class="flex">
     <p>ingredient tiers:</p>
     <?php
-        foreach ($tiertypes['ingredients'] as $key => $val) {
+        foreach ($tiertypes['ingredients'] as $val) {
             ?>
                 <span class="itemtier zoom" onclick="togglebox(this);"><?php echo $val; ?></span>
             <?php 
@@ -48,7 +46,7 @@ function listfilteroptions() {
     <div class="flex">
     <p>item tiers:</p>
     <?php
-        foreach ($tiertypes['items'] as $key => $val) {
+        foreach ($tiertypes['items'] as $val) {
             ?>
                     <span class="itemtier zoom" onclick="togglebox(this);"><?php echo $val; ?></span>
             <?php 
