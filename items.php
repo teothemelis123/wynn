@@ -12,11 +12,15 @@ include 'icl/listfilteroptions.inc.php';
     <style>
         body {
             font-family: 'Brush Script MT', cursive;
-            padding: 10px;
+            padding: 20px;
             margin: 0px;
-            background: rgba(225, 225, 225);
         }
         
+        #maindiv {
+            border-radius: 15px;
+            background: rgba(165, 165, 165);
+            padding: 20px;
+        }
         p {
             margin: 0;
             padding: 0;
@@ -44,8 +48,22 @@ include 'icl/listfilteroptions.inc.php';
         #itemcards {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-evenly;
+            justify-content: space-between;
             color: rgba(220, 220, 220);
+        }
+
+        .optioncontainer {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+        }
+
+
+        .optioncontainer > p {
+            color: white;
         }
 
         .fadeout {
@@ -107,8 +125,8 @@ include 'icl/listfilteroptions.inc.php';
         }
 
         .zoom.transitioned {
-            background-color: rgba(100, 100, 100);
-            transform: scale(1);
+            background-color: rgba(50, 50, 50);
+            color: white;
         }
 
         .advancedfilter {
@@ -143,11 +161,13 @@ include 'icl/listfilteroptions.inc.php';
 </head>
 
 <body>
-<a href="index.php">Home</a>
 
-<input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
-<div id="filters"><?php listfilteroptions(); ?></div>
-<div id="iteminfo"></div>
+<div id="maindiv">
+    <a href="index.php">Home</a>
+    <input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
+    <div id="filters"><?php listfilteroptions(); ?></div>
+    <div id="iteminfo"></div>
+</div>
 
 <script>
     function itemnametyped() {
