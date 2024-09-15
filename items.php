@@ -12,10 +12,16 @@ include 'icl/listfilteroptions.inc.php';
     <style>
         body {
             font-family: 'Brush Script MT', cursive;
-            padding: 0px;
+            padding: 10px;
             margin: 0px;
+            background: rgba(225, 225, 225);
         }
         
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
         #itemmetadata {
             display: none
         }
@@ -35,23 +41,32 @@ include 'icl/listfilteroptions.inc.php';
             font-size: 26px;
         }
 
-        p {
-            margin: 0;
-            padding: 0;
-        }
-
         #itemcards {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-evenly;
             color: rgba(220, 220, 220);
         }
 
+        .fadeout {
+          visibility: hidden;
+          opacity: 0;
+          transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+        }
+
+        .fadein {
+          visibility: visible;
+          opacity: 1;
+          transition-delay: 0ms;
+        }
+
         .itemcard {
-            width: 300px;
-            background: rgba(80, 80, 80);
-            font-size: 24px;
+            width: 30vh;
+            background: rgba(28, 0, 16);
+            font-size: 18px;
             box-shadow: 4px 4px #000000;
             border-radius: 15px;
+            border: 2px solid black;
             padding: 15px;
             margin: 15px;
         }
@@ -64,11 +79,13 @@ include 'icl/listfilteroptions.inc.php';
             margin-top: 30px;
         }
 
-        .base, .requirements, .identifications, .powderslots{
+        .base, .requirements, .identifications, .powderslots {
             margin-top: 20px;
         }
+
         .hidden {
             display: none;
+            min-height: 50px;
         }
 
         .range {
@@ -78,44 +95,80 @@ include 'icl/listfilteroptions.inc.php';
         .ident {
             display: block;
         }
-        .normal {
-            color: rgb(255, 255, 255)
-        }
-        .unique {
-            color: rgb(252, 252, 84)
-        }
-        .rare {
-            color: rgb(255, 80, 232)
-        }
-        .legendary {
-            color: rgb(80, 253, 255)
-        }
-        .fabled {
-            color: rgb(246, 62, 62)
-        }
-        .set {
-            color: rgb(56, 229, 37)
-        }
-        .mythic {
-            color: rgb(164, 57, 192)
+
+        .zoom {
+            padding: 10px 20px;
+            margin: 20px 10px;
+            background: rgba(200, 200, 200);
+            transition: transform .2s;
+            text-align: center;
+            border-radius: 15px;
+            transition: all 0.3s ease; /* Transition for all properties */
         }
 
+        .zoom.transitioned {
+            background-color: rgba(100, 100, 100);
+            transform: scale(1);
+        }
+
+        .advancedfilter {
+            margin-top: 10px;
+        }
+
+        .advancedfiltercontainer {
+            margin-top: 10px;
+            min-height: 50px;
+        }
+
+        .zoom:hover {
+            cursor: pointer;
+            transform: scale(1.15);
+        }
+
+        .glowing{
+          animation: glowingbg 1.5s 0s linear infinite alternate;
+        }
+
+        @keyframes glowingbg{
+          from   {background:rgb(28, 0, 16)}
+          to     {background:rgba(84, 7, 112)}
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        
     </style>
 </head>
 
 <body>
 <a href="index.php">Home</a>
 
-<input id="query" onkeyup="searchitems(); return false;" placeholder="Item name"></input>
+<input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
 <div id="filters"><?php listfilteroptions(); ?></div>
 <div id="iteminfo"></div>
 
 <script>
+    function itemnametyped() {
+        if (this.timer) clearTimeout(this.timer);
+        this.timer = setTimeout(function() { searchitems(); }, 500); 
+    }
+
+    function togglebox(d) {
+        d.classList.toggle('transitioned');
+        d.toggled = !d.toggled;
+        searchitems(); 
+    }
     function gid(str) {
         return document.getElementById(str);
     }
 
     function searchitems(page) {
+        var items = gid('itemcards');
+
+        if (items) items.style.filter = "blur(5px)";
+
         var query = encodeURI(gid('query').value) || undefined;
         var attackSpeed = []; // attack speed only
         var professions = []; // advanced crafting, and advanced gathering
@@ -126,11 +179,11 @@ include 'icl/listfilteroptions.inc.php';
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
-            if (t.checked) {
+            if (t.toggled) {
                 if (t.classList.contains('checkbox_attackSpeed')) {
-                    attackSpeed.push(t.value);
+                    attackSpeed.push(t.id);
                 } else if (t.classList.contains('checkbox_profession')) {
-                    professions.push(t.value);
+                    professions.push(t.innerHTML);
                 } else {
                     // for weapon, armor, accessory, tome, tool...
                     // lets say we have weapon checked AND bow checked, we must
@@ -148,7 +201,7 @@ include 'icl/listfilteroptions.inc.php';
                             skipfilter[maincheckboxname] = true;
                         }
                     }
-                    types.push(t.value);
+                    types.push(t.innerHTML);
                 }
             }
         }
@@ -157,7 +210,7 @@ include 'icl/listfilteroptions.inc.php';
         typeselements = document.getElementsByClassName('filter');
         for (var t of typeselements) {
             // if its checked, and there is no sub checkbox checked we add it
-            if (t.checked && !skipfilter[t.value]) types.push(t.value);
+            if (t.toggled && !skipfilter[t.innerHTML]) types.push(t.innerHTML);
         }
 
         levelRange[0] = parseInt(gid('levelrangemin').value, 10);
@@ -167,17 +220,8 @@ include 'icl/listfilteroptions.inc.php';
         var tierelements = document.getElementsByClassName('itemtier');
         for (var t of tierelements) {
             // if its checked, and there is no sub checkbox checked we add it
-            if (t.checked) tier.push(t.value);
+            if (t.toggled) tier.push(t.innerHTML);
         }
-        //console.log("types: "+types);
-        //console.log("professions: "+professions);
-        //console.log("attackSpeed: "+attackSpeed);
-        //console.log("==================================================");
-        
-        //if (query && query.length < 3) {
-        //    gid("iteminfo").innerHTML = ""; 
-        //    return;
-        //}
 
         $.ajax({
             type: 'GET',
@@ -195,6 +239,7 @@ include 'icl/listfilteroptions.inc.php';
             },
             success: function (response) {
                 gid("iteminfo").innerHTML = response;
+                if (items) items.style.filter = "blur(0px)";
             },
             error: function (error) {
                 console.log(error);
@@ -230,34 +275,21 @@ include 'icl/listfilteroptions.inc.php';
     }
 
     function mainfilterclicked(d) {
-        var filters = document.getElementsByClassName(d.value+'_advancedfiltercontainer');
+        var filters = document.getElementsByClassName(d.innerHTML+'_advancedfiltercontainer');
         for (var i = 0; i < filters.length; i++) {
-            if (d.checked) {
-                filters[i].style.display = 'block';
+            if (d.toggled) {
+                filters[i].style.display = 'flex';
             } else {
                 filters[i].style.display = 'none'; // hide the div
                 // set all checkboxes in that div to false
-                var inputs = filters[i].getElementsByTagName('input');
-                for (var j = 0; j < inputs.length; j++) {
-                inputs[j].checked = false; 
+                var els = filters[i].getElementsByTagName('div');
+                for (var j = 0; j < els.length; j++) {
+                    if (els[j].toggled) togglebox(els[j]);
                 }
             }
         }
 
     }
-
-function debounce(func, delay) {
-        let timeout;
-        return function() {
-            const context = this;
-            const args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
-
-    const debouncedSearch = debounce(searchitems, 300);
-
 
 </script>
 </body>
