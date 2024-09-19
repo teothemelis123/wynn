@@ -12,11 +12,15 @@ include 'icl/listfilteroptions.inc.php';
     <style>
         body {
             font-family: 'Brush Script MT', cursive;
-            padding: 10px;
+            padding: 20px;
             margin: 0px;
-            background: rgba(225, 225, 225);
         }
         
+        #maindiv {
+            border-radius: 15px;
+            background: rgba(165, 165, 165);
+            padding: 20px;
+        }
         p {
             margin: 0;
             padding: 0;
@@ -44,8 +48,62 @@ include 'icl/listfilteroptions.inc.php';
         #itemcards {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-evenly;
+            justify-content: space-between;
             color: rgba(220, 220, 220);
+        }
+
+        #identificationssubcontainer {
+            display: flex;
+            width: 500px;
+        }
+
+        #identificationsinputcontainer {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            width: 200px;
+        }
+        
+        #identificationcontainer {
+            display: flex;
+            width: 500px;
+        }
+
+        #identificationslist {
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            width: auto;
+            margin: 10px;
+            padding: 20px;
+            min-width: 200px;
+        }
+        
+        #selectedidentificationslist {
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            margin: 10px;
+            padding: 20px;
+            min-width: 200px;
+        }
+
+        .optioncontainer {
+            display: inline-block;
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+        }
+
+
+        .optioncontainer > p {
+            color: white;
+        }
+        
+        .header {
+            text-decoration: underline;
+            color: white;
         }
 
         .fadeout {
@@ -85,7 +143,6 @@ include 'icl/listfilteroptions.inc.php';
 
         .hidden {
             display: none;
-            min-height: 50px;
         }
 
         .range {
@@ -107,8 +164,8 @@ include 'icl/listfilteroptions.inc.php';
         }
 
         .zoom.transitioned {
-            background-color: rgba(100, 100, 100);
-            transform: scale(1);
+            background-color: rgba(50, 50, 50);
+            color: white;
         }
 
         .advancedfilter {
@@ -137,18 +194,19 @@ include 'icl/listfilteroptions.inc.php';
         .flex {
             display: flex;
         }
-
-        
     </style>
 </head>
 
 <body>
-<a href="index.php">Home</a>
 
-<input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
-<div id="filters"><?php listfilteroptions(); ?></div>
-<div id="iteminfo"></div>
+<div id="maindiv">
+    <a href="index.php">Home</a>
+    <input id="query" onkeyup="itemnametyped(); return false;" placeholder="Item name"></input>
+    <div id="filters"><?php listfilteroptions(); ?></div>
+    <div id="iteminfo"></div>
+</div>
 
+<script src="nano.js"></script>
 <script>
     function itemnametyped() {
         if (this.timer) clearTimeout(this.timer);
@@ -175,7 +233,11 @@ include 'icl/listfilteroptions.inc.php';
         var types = []; // everything else
         var skipfilter = {}; // keeps track of main filters to not add to types
         var levelRange = [];
-        var identifications = JSON.parse(gid("identsearchlist").value);
+
+        var identificationsdata = gid('identificationsdata');
+        var identifications = [];
+        if (identificationsdata) identifications = JSON.parse(identificationsdata.value);
+
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
@@ -223,12 +285,8 @@ include 'icl/listfilteroptions.inc.php';
             if (t.toggled) tier.push(t.innerHTML);
         }
 
-        $.ajax({
-            type: 'GET',
-            url: 'services.php',
-            data: { 
+        var data = {
                 page: page,
-                cmd: 'searchitems',  
                 query: query,
                 type: types,
                 attackSpeed: attackSpeed,
@@ -236,15 +294,9 @@ include 'icl/listfilteroptions.inc.php';
                 professions: professions,
                 levelRange: levelRange,
                 tier: tier
-            },
-            success: function (response) {
-                gid("iteminfo").innerHTML = response;
-                if (items) items.style.filter = "blur(0px)";
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+        }
+        var dataencoded = JSON.stringify(data);
+        ajxpgn('iteminfo', 'services.php?cmd=searchitems', 0, 0, dataencoded);
     }
     searchitems();
 
@@ -267,11 +319,23 @@ include 'icl/listfilteroptions.inc.php';
         }
     }
 
-    function addtoidents(d) {
-        var val = gid('identsearchlist').value;
-        var data = JSON.parse(val);
-        data.push(d.innerText);
-        gid('identsearchlist').innerText = JSON.stringify(data); 
+    function addidentification(d) {
+        var identification = encodeHTML(d.innerHTML);
+        var currentidentifications = gid('identificationsdata').value;
+        var curridentsdecoded = JSON.parse(currentidentifications);
+        // if they are already searching for this identification, do not allow
+        // another entry
+        if (curridentsdecoded.includes(identification)) return;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=addidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
+    }
+
+    function deleteidentification(identification) {
+        var currentidentifications = gid('identificationsdata').value;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=deleteidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
     }
 
     function mainfilterclicked(d) {

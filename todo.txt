@@ -1,0 +1,6 @@
+* make it so all css elements that use border radius grey styling get it from
+  one class and arent hard coded individually
+
+* work on making the level more interactive? LATER THING...
+
+* MAJOR BUG, MAJOR IDS CANNOT BE GIVEN TO API WITH NORMAL IDS!
