@@ -169,6 +169,7 @@ include 'icl/listfilteroptions.inc.php';
     <div id="iteminfo"></div>
 </div>
 
+<script src="nano.js"></script>
 <script>
     function itemnametyped() {
         if (this.timer) clearTimeout(this.timer);
@@ -243,12 +244,8 @@ include 'icl/listfilteroptions.inc.php';
             if (t.toggled) tier.push(t.innerHTML);
         }
 
-        $.ajax({
-            type: 'GET',
-            url: 'services.php',
-            data: { 
+        var data = {
                 page: page,
-                cmd: 'searchitems',  
                 query: query,
                 type: types,
                 attackSpeed: attackSpeed,
@@ -256,15 +253,10 @@ include 'icl/listfilteroptions.inc.php';
                 professions: professions,
                 levelRange: levelRange,
                 tier: tier
-            },
-            success: function (response) {
-                gid("iteminfo").innerHTML = response;
-                if (items) items.style.filter = "blur(0px)";
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+        }
+        var dataencoded = JSON.stringify(data);
+        //nano.js
+        ajxpgn('iteminfo', 'services.php?cmd=searchitems', 0, 0, dataencoded);
     }
     searchitems();
 
