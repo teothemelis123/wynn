@@ -52,6 +52,41 @@ include 'icl/listfilteroptions.inc.php';
             color: rgba(220, 220, 220);
         }
 
+        #identificationssubcontainer {
+            display: flex;
+            width: 500px;
+        }
+
+        #identificationsinputcontainer {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            width: 200px;
+        }
+        
+        #identificationcontainer {
+            display: flex;
+            width: 500px;
+        }
+
+        #identificationslist {
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            width: auto;
+            margin: 10px;
+            padding: 20px;
+            min-width: 200px;
+        }
+        
+        #selectedidentificationslist {
+            border-radius: 15px;
+            background: rgba(120, 120, 120);
+            margin: 10px;
+            padding: 20px;
+            min-width: 200px;
+        }
+
         .optioncontainer {
             display: inline-block;
             margin: 10px;
@@ -63,6 +98,11 @@ include 'icl/listfilteroptions.inc.php';
 
 
         .optioncontainer > p {
+            color: white;
+        }
+        
+        .header {
+            text-decoration: underline;
             color: white;
         }
 
@@ -103,7 +143,6 @@ include 'icl/listfilteroptions.inc.php';
 
         .hidden {
             display: none;
-            min-height: 50px;
         }
 
         .range {
@@ -155,8 +194,6 @@ include 'icl/listfilteroptions.inc.php';
         .flex {
             display: flex;
         }
-
-        
     </style>
 </head>
 
@@ -196,7 +233,11 @@ include 'icl/listfilteroptions.inc.php';
         var types = []; // everything else
         var skipfilter = {}; // keeps track of main filters to not add to types
         var levelRange = [];
-        var identifications = JSON.parse(gid("identsearchlist").value);
+
+        var identificationsdata = gid('identificationsdata');
+        var identifications = [];
+        if (identificationsdata) identifications = JSON.parse(identificationsdata.value);
+
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
         for (var t of typeselements) {
@@ -255,7 +296,6 @@ include 'icl/listfilteroptions.inc.php';
                 tier: tier
         }
         var dataencoded = JSON.stringify(data);
-        //nano.js
         ajxpgn('iteminfo', 'services.php?cmd=searchitems', 0, 0, dataencoded);
     }
     searchitems();
@@ -279,11 +319,23 @@ include 'icl/listfilteroptions.inc.php';
         }
     }
 
-    function addtoidents(d) {
-        var val = gid('identsearchlist').value;
-        var data = JSON.parse(val);
-        data.push(d.innerText);
-        gid('identsearchlist').innerText = JSON.stringify(data); 
+    function addidentification(d) {
+        var identification = encodeHTML(d.innerHTML);
+        var currentidentifications = gid('identificationsdata').value;
+        var curridentsdecoded = JSON.parse(currentidentifications);
+        // if they are already searching for this identification, do not allow
+        // another entry
+        if (curridentsdecoded.includes(identification)) return;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=addidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
+    }
+
+    function deleteidentification(identification) {
+        var currentidentifications = gid('identificationsdata').value;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=deleteidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
     }
 
     function mainfilterclicked(d) {

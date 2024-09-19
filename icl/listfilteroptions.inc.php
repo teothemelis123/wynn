@@ -1,6 +1,7 @@
 <?php
 include 'icl/itemmetadata.inc.php';
 include 'icl/cleaninfo.inc.php';
+include 'icl/listidentifications.inc.php';
 function listfilteroptions() {
     $metadata = itemmetadata();
     $advancedfilters = $metadata['filters']['advanced'];
@@ -16,21 +17,27 @@ function listfilteroptions() {
     $levelRange = $filters['levelRange']; // ['items'] and ['ingredients'] are in tier
 ?>
 <div id="identificationscontainer">
-    <label for="identificationsinput">identification:</label>
-    <input id="identificationsinput" onkeyup="autocompleteident(); return false"></input>
+    <div id="identificationsinputcontainer">
+        <label for="identificationsinput" class="header">Search identifications:</label>
+        <input id="identificationsinput" onkeyup="autocompleteident(); return false"></input>
+    </div>
 
-    <div id="identificationslist">
-        <?php
-        foreach ($identifications as $ident) {
-        ?>
-            <a class="hidden" href=# onclick="addtoidents(this); return false;"><?php echo $ident; ?></a>
-        <?php
-        }
-        ?>
+    <div id="identificationssubcontainer">
+        <div id="identificationslist">
+            <p class="header">identifications</p>
+            <?php
+            foreach ($identifications as $ident) {
+            ?>
+                <a class="hidden" href=# onclick="addidentification(this); return false;"><?php echo $ident; ?></a>
+            <?php
+            }
+            ?>
+        </div>
+        <div id="selectedidentificationslist">
+            <?php listidentifications(); ?>
+        </div>
     </div>
 </div>
-<p>current idents:</p>
-<textarea id="identsearchlist">[]</textarea>
 
 <div id="types">
     <div class="optioncontainer">

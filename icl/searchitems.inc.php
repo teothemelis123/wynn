@@ -22,10 +22,8 @@ function searchitems() {
     curl_close($curl);
 
     $results = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) die('Error decoding JSON response.');
 
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        die('Error decoding JSON response.');
-    }
     listitems($results);
 }
 ?>
