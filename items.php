@@ -237,6 +237,9 @@ include 'icl/listfilteroptions.inc.php';
         var identificationsdata = gid('identificationsdata');
         var identifications = [];
         if (identificationsdata) identifications = JSON.parse(identificationsdata.value);
+        var majoridentificationsdata = gid('majoridentificationsdata');
+        var majorIds = [];
+        if (majoridentificationsdata) majorIds = JSON.parse(majoridentificationsdata.value);
 
         var tier = [];
         var typeselements = document.getElementsByClassName('advancedfilter');
@@ -291,6 +294,7 @@ include 'icl/listfilteroptions.inc.php';
                 type: types,
                 attackSpeed: attackSpeed,
                 identifications: identifications,
+                majorIds: majorIds,
                 professions: professions,
                 levelRange: levelRange,
                 tier: tier
@@ -322,18 +326,49 @@ include 'icl/listfilteroptions.inc.php';
     function addidentification(d) {
         var identification = encodeHTML(d.innerHTML);
         var currentidentifications = gid('identificationsdata').value;
-        var curridentsdecoded = JSON.parse(currentidentifications);
+        var currentmajoridentifications = gid('majoridentificationsdata').value;
+        var currentidentificationsdecoded = JSON.parse(currentidentifications);
         // if they are already searching for this identification, do not allow
         // another entry
-        if (curridentsdecoded.includes(identification)) return;
-        ajxpgn('selectedidentificationslist', 'services.php?cmd=addidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+        if (currentidentificationsdecoded.includes(identification)) return;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=addidentification&identification='+identification+
+               "&currentidentifications="+currentidentifications+
+               "&currentmajoridentifications="+currentmajoridentifications, 0, 0, 0, function() {
             searchitems();
         });
     }
 
     function deleteidentification(identification) {
         var currentidentifications = gid('identificationsdata').value;
-        ajxpgn('selectedidentificationslist', 'services.php?cmd=deleteidentification&identification='+identification+"&currentidentifications="+currentidentifications, 0, 0, 0, function() {
+        var currentmajoridentifications = gid('majoridentificationsdata').value;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=deleteidentification&identification='+identification+
+                "&currentmajoridentifications="+ currentmajoridentifications+
+                "&currentidentifications="+ currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
+    }
+
+    function addmajoridentification(d) {
+        var identification = encodeHTML(d.innerHTML);
+        var currentidentifications = gid('identificationsdata').value;
+        var currentmajoridentifications = gid('majoridentificationsdata').value;
+        var currentmajoridentificationsdecoded = JSON.parse(currentmajoridentifications);
+        // if they are already searching for this identification, do not allow
+        // another entry
+        if (currentmajoridentificationsdecoded.includes(identification)) return;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=addmajoridentification&identification='+identification+
+                "&currentmajoridentifications="+ currentmajoridentifications+
+                "&currentidentifications="+ currentidentifications, 0, 0, 0, function() {
+            searchitems();
+        });
+    }
+
+    function deletemajoridentification(identification) {
+        var currentidentifications = gid('identificationsdata').value;
+        var currentmajoridentifications = gid('majoridentificationsdata').value;
+        ajxpgn('selectedidentificationslist', 'services.php?cmd=deletemajoridentification&identification='+identification+
+                "&currentmajoridentifications="+ currentmajoridentifications+
+                "&currentidentifications="+ currentidentifications, 0, 0, 0, function() {
             searchitems();
         });
     }

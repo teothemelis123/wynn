@@ -9,8 +9,6 @@ function listfilteroptions() {
     $identifications = $metadata['identifications'];
     $majorids = $metadata['majorIds'];
 
-    $identifications = array_merge($identifications, $majorids);
-
     $filters = $metadata['filters'];
     $types = $filters['type'];
     $tiertypes = $filters['tier']; // ['items'] and ['ingredients'] are in tier
@@ -29,6 +27,11 @@ function listfilteroptions() {
             foreach ($identifications as $ident) {
             ?>
                 <a class="hidden" href=# onclick="addidentification(this); return false;"><?php echo $ident; ?></a>
+            <?php
+            }
+            foreach ($majorids as $ident) {
+            ?>
+                <a class="hidden" href=# onclick="addmajoridentification(this); return false;"><?php echo $ident; ?></a>
             <?php
             }
             ?>
